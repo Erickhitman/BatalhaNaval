@@ -6,8 +6,8 @@ Jogo individual de Batalha Naval desenvolvido em Java para a disciplina Linguage
 
 ## Integrantes
 
-- Integrante 1: a definir
-- Integrante 2: a definir
+- Integrante 1: Caio Figueiredo dos Santos
+- Integrante 2: Erick da Rocha Soares
 
 ## Tecnologias
 
@@ -49,11 +49,5 @@ Abra o projeto no IntelliJ IDEA com o JDK 26 configurado e execute `org.example.
 - Icones visuais distintos para embarcacoes atingidas e tiros na agua.
 - Telas de vitoria/derrota com total de tiros e opcoes de continuar.
 - Testes das configuracoes, posicionamento, disparos, repeticao, vitoria e derrota.
-
-## Divisão sugerida para a dupla
-
-- **Integrante 1:** enums, modelos, servicos e testes das regras.
-- **Integrante 2:** telas Swing, icones e apresentacao da interface.
-- **Integracao:** `ControladorJogo` conecta as telas ao `ServicoJogo`.
 
 Para executar as verificações das regras, execute `org.example.model.TesteRegrasJogo` pela IDE.
