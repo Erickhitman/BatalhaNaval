@@ -6,7 +6,7 @@ Jogo individual de Batalha Naval desenvolvido em Java para a disciplina Linguage
 
 ## Integrantes
 
-- Integrante 1: Caio Figueiredo dos Santos
+- Integrante 1: Caio Figueiredo Santos
 - Integrante 2: Erick da Rocha Soares
 
 ## Tecnologias
