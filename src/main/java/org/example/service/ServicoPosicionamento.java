@@ -28,7 +28,11 @@ public class ServicoPosicionamento {
             throw new IllegalArgumentException("Tabuleiro e dificuldade incompativeis.");
         }
         List<Embarcacao> ships = new ArrayList<>();
-        for (TipoEmbarcacao type : TipoEmbarcacao.values()) {
+        // Do maior para o menor: se os navios pequenos entrarem primeiro, eles podem
+        // bloquear todas as linhas livres e o porta-aviões ficaria sem espaço.
+        TipoEmbarcacao[] types = TipoEmbarcacao.values();
+        for (int index = types.length - 1; index >= 0; index--) {
+            TipoEmbarcacao type = types[index];
             for (int count = 0; count < difficulty.getShipCount(type); count++) {
                 Embarcacao ship = new Embarcacao(type);
                 placeShip(board, ship);

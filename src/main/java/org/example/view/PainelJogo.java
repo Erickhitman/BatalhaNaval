@@ -2,11 +2,13 @@ package org.example.view;
 
 import org.example.enums.Dificuldade;
 import org.example.enums.EstadoDisparo;
+import org.example.enums.TipoEmbarcacao;
 import org.example.model.ResultadoDisparo;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
@@ -17,12 +19,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
+import java.awt.event.ActionListener;
 import java.util.function.BiConsumer;
 
 public class PainelJogo extends JPanel {
     private final JLabel shotsLabel = new JLabel("", SwingConstants.CENTER);
     private final JLabel messageLabel = new JLabel("Clique em uma casa para disparar.", SwingConstants.CENTER);
     private final JButton[][] cells;
+    private final JButton footerButton = new JButton("Voltar ao menu");
 
     public PainelJogo(Dificuldade difficulty, BiConsumer<Integer, Integer> onShoot, Runnable onMenu) {
         setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
@@ -63,10 +67,16 @@ public class PainelJogo extends JPanel {
         }
         add(board, BorderLayout.CENTER);
 
-        JButton menuButton = new JButton("Voltar ao menu");
-        menuButton.addActionListener(event -> onMenu.run());
+        footerButton.addActionListener(event -> {
+            int choice = JOptionPane.showConfirmDialog(this,
+                    "Abandonar a partida e voltar ao menu?", "Voltar ao menu",
+                    JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                onMenu.run();
+            }
+        });
         JPanel footer = new JPanel(new BorderLayout());
-        footer.add(menuButton, BorderLayout.CENTER);
+        footer.add(footerButton, BorderLayout.CENTER);
         add(footer, BorderLayout.SOUTH);
         updateShots(difficulty.getShotLimit());
     }
@@ -75,14 +85,42 @@ public class PainelJogo extends JPanel {
         JButton cell = cells[row][column];
         cell.setEnabled(false);
         if (result.getOutcome() == EstadoDisparo.HIT) {
+            String ship = result.getShipType().getDisplayName();
             cell.setIcon(new IconeEmbarcacao(result.getShipType()));
-            cell.setToolTipText(result.getShipType().getDisplayName() + " atingido");
-            setMessage("Acertou! Embarcação atingida: " + result.getShipType().getDisplayName() + ".");
+            if (result.isSunk()) {
+                cell.setToolTipText(ship + " afundado");
+                setMessage("Acertou e afundou: " + ship + "!");
+            } else {
+                cell.setToolTipText(ship + " atingido");
+                setMessage("Acertou! Embarcação atingida: " + ship + ".");
+            }
         } else {
             cell.setIcon(new IconeAgua());
-            cell.setToolTipText("Tiro na agua");
+            cell.setToolTipText("Tiro na água");
             setMessage("Tiro na água.");
         }
+    }
+
+    public void revealShip(int row, int column, TipoEmbarcacao type) {
+        JButton cell = cells[row][column];
+        cell.setIcon(new IconeEmbarcacao(type, true));
+        cell.setToolTipText(type.getDisplayName() + " (não encontrado)");
+    }
+
+    /** Trava o tabuleiro, mostra o desfecho e troca o botao do rodape por "Ver resultado". */
+    public void showEnd(boolean won, Runnable onContinue) {
+        for (JButton[] line : cells) {
+            for (JButton cell : line) {
+                cell.setEnabled(false);
+            }
+        }
+        setMessage(won ? messageLabel.getText() + " Frota destruída!"
+                : "Acabaram os tiros! Veja onde a frota estava.");
+        for (ActionListener listener : footerButton.getActionListeners()) {
+            footerButton.removeActionListener(listener);
+        }
+        footerButton.setText("Ver resultado");
+        footerButton.addActionListener(event -> onContinue.run());
     }
 
     public void updateShots(int shotsRemaining) {

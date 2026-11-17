@@ -2,6 +2,7 @@ package org.example.model;
 
 import org.example.enums.EstadoCasa;
 import org.example.enums.EstadoDisparo;
+import org.example.enums.TipoEmbarcacao;
 
 public class Tabuleiro {
     private final int size;
@@ -36,6 +37,15 @@ public class Tabuleiro {
 
     public EstadoCasa getCellStatus(int row, int column) {
         return getCell(row, column).getStatus();
+    }
+
+    /** Tipo da embarcacao que ainda nao foi atingida nesta casa, ou null (agua ou casa ja atingida). */
+    public TipoEmbarcacao getHiddenShipType(int row, int column) {
+        Casa cell = getCell(row, column);
+        if (cell.hasShip() && cell.getStatus() == EstadoCasa.UNTOUCHED) {
+            return cell.getShip().getType();
+        }
+        return null;
     }
 
     public boolean canPlaceShip(int length, int row, int column, boolean horizontal) {
@@ -80,10 +90,11 @@ public class Tabuleiro {
             cell.setStatus(EstadoCasa.MISS);
             return new ResultadoDisparo(EstadoDisparo.MISS, null);
         }
+        Embarcacao ship = cell.getShip();
         cell.setStatus(EstadoCasa.HIT);
-        cell.getShip().receiveHit();
+        ship.receiveHit();
         remainingShipCells--;
-        return new ResultadoDisparo(EstadoDisparo.HIT, cell.getShip().getType());
+        return new ResultadoDisparo(EstadoDisparo.HIT, ship.getType(), ship.isSunk());
     }
 
     Casa getCell(int row, int column) {

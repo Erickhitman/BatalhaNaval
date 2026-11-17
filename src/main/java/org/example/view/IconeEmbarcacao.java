@@ -3,6 +3,7 @@ package org.example.view;
 import org.example.enums.TipoEmbarcacao;
 
 import javax.swing.Icon;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -15,9 +16,16 @@ public class IconeEmbarcacao implements Icon {
     private static final Color DECK = new Color(104, 112, 115);
     private static final Color DETAIL = new Color(219, 225, 222);
     private final TipoEmbarcacao type;
+    private final boolean revealed;
 
     public IconeEmbarcacao(TipoEmbarcacao type) {
+        this(type, false);
+    }
+
+    /** revealed = true desenha o navio esmaecido (usado para mostrar onde a frota estava). */
+    public IconeEmbarcacao(TipoEmbarcacao type, boolean revealed) {
         this.type = type;
+        this.revealed = revealed;
     }
 
     @Override
@@ -35,6 +43,9 @@ public class IconeEmbarcacao implements Icon {
         Graphics2D desenho = (Graphics2D) graphics.create();
         desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         desenho.translate(x, y);
+        if (revealed) {
+            desenho.setComposite(AlphaComposite.SrcOver.derive(0.45f));
+        }
         switch (type) {
             case SUBMARINE -> desenharSubmarino(desenho);
             case DESTROYER -> desenharDestroier(desenho);

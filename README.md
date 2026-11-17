@@ -6,12 +6,12 @@ Jogo individual de Batalha Naval desenvolvido em Java para a disciplina Linguage
 
 ## Integrantes
 
-- Integrante 1: Caio Figueiredo Santos
+- Integrante 1: Caio Figueiredo dos Santos
 - Integrante 2: Erick da Rocha Soares
 
 ## Tecnologias
 
-- Java 26 (versao configurada no projeto)
+- Java 17 ou superior
 - Java Swing
 - Maven
 
@@ -28,7 +28,7 @@ As embarcações são posicionadas aleatoriamente na horizontal ou vertical, sem
 
 ## Como executar
 
-Abra o projeto no IntelliJ IDEA com o JDK 26 configurado e execute `org.example.Inicio`. Também é possível importar o projeto pelo `pom.xml` e executar a classe `Inicio` pela IDE.
+Abra o projeto no IntelliJ IDEA com o JDK 17 ou superior configurado e execute `org.example.Inicio`. Também é possível importar o projeto pelo `pom.xml` e executar a classe `Inicio` pela IDE.
 
 ## Pacotes
 
@@ -47,7 +47,10 @@ Abra o projeto no IntelliJ IDEA com o JDK 26 configurado e execute `org.example.
 - Tabuleiro clicavel com identificacao de linhas e colunas.
 - Indicador de tiros restantes e mensagens com o resultado de cada disparo.
 - Icones visuais distintos para embarcacoes atingidas e tiros na agua.
+- Mensagem especial quando uma embarcacao e afundada.
+- No fim da partida o tabuleiro fica visivel e, na derrota, as embarcacoes restantes sao reveladas.
 - Telas de vitoria/derrota com total de tiros e opcoes de continuar.
+- Confirmacao ao abandonar uma partida em andamento.
 - Testes das configuracoes, posicionamento, disparos, repeticao, vitoria e derrota.
 
 Para executar as verificações das regras, execute `org.example.model.TesteRegrasJogo` pela IDE.

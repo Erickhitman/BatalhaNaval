@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.enums.Dificuldade;
 import org.example.enums.EstadoDisparo;
+import org.example.enums.TipoEmbarcacao;
 import org.example.model.ResultadoDisparo;
 import org.example.service.ServicoJogo;
 import org.example.view.JanelaJogo;
@@ -30,12 +31,28 @@ public class ControladorJogo implements JanelaJogo.AcoesControladorJogo {
     @Override
     public void fire(int row, int column) {
         ResultadoDisparo result = game.fire(row, column);
-        if (result.getOutcome() == EstadoDisparo.ALREADY_SHOT) {
+        if (result.getOutcome() == EstadoDisparo.ALREADY_SHOT
+                || result.getOutcome() == EstadoDisparo.GAME_OVER) {
             return;
         }
         window.updateGame(row, column, result, game.getShotsRemaining());
         if (game.isFinished()) {
-            window.showResult(game.isWon(), game.getShotsUsed(), game.getDifficulty());
+            if (!game.isWon()) {
+                revealRemainingShips();
+            }
+            window.showEnd(game.isWon(), game.getShotsUsed(), game.getDifficulty());
+        }
+    }
+
+    private void revealRemainingShips() {
+        int size = game.getDifficulty().getBoardSize();
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                TipoEmbarcacao type = game.getHiddenShipType(row, column);
+                if (type != null) {
+                    window.revealShip(row, column, type);
+                }
+            }
         }
     }
 

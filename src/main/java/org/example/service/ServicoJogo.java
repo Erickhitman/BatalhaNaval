@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.enums.Dificuldade;
 import org.example.enums.EstadoDisparo;
+import org.example.enums.TipoEmbarcacao;
 import org.example.model.Tabuleiro;
 import org.example.model.ResultadoDisparo;
 
@@ -52,6 +53,10 @@ public class ServicoJogo {
 
     public Dificuldade getDifficulty() {
         return difficulty;
+    }
+
+    public TipoEmbarcacao getHiddenShipType(int row, int column) {
+        return board.getHiddenShipType(row, column);
     }
 
     public int getShotsUsed() {

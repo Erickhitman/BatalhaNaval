@@ -16,6 +16,8 @@ public class TesteRegrasJogo {
         verifyRandomFleetPlacement();
         verifyShotsAndVictory();
         verifyDefeatAndRepeatedShots();
+        verifyPlacementNeverFails();
+        verifySunkAndHiddenShips();
         System.out.println("Todos os testes de regras passaram.");
     }
 
@@ -131,6 +133,35 @@ public class TesteRegrasJogo {
         check(game.isFinished() && !game.isWon(), "Acabar a municao sem destruir a frota deve perder.");
         check(game.getShotsRemaining() == 0 && game.getShotsUsed() == difficulty.getShotLimit(),
                 "Derrota deve consumir o limite de tiros.");
+    }
+
+    private static void verifyPlacementNeverFails() {
+        for (Dificuldade difficulty : Dificuldade.values()) {
+            for (long seed = 0; seed < 20000; seed++) {
+                Tabuleiro board = new Tabuleiro(difficulty.getBoardSize());
+                try {
+                    new ServicoPosicionamento(new Random(seed)).placeFleet(board, difficulty);
+                } catch (IllegalStateException exception) {
+                    throw new AssertionError("Frota " + difficulty + " nao coube com a semente " + seed + ".",
+                            exception);
+                }
+            }
+        }
+    }
+
+    private static void verifySunkAndHiddenShips() {
+        Tabuleiro board = new Tabuleiro(6);
+        board.placeShip(new Embarcacao(TipoEmbarcacao.DESTROYER), 0, 0, true);
+        board.placeShip(new Embarcacao(TipoEmbarcacao.SUBMARINE), 3, 3, true);
+        ServicoJogo game = new ServicoJogo(Dificuldade.EASY, board);
+
+        check(game.getHiddenShipType(0, 0) == TipoEmbarcacao.DESTROYER, "Navio nao atingido deve estar oculto.");
+        check(game.getHiddenShipType(5, 5) == null, "Agua nao deve revelar navio.");
+        check(!game.fire(0, 0).isSunk(), "Primeiro acerto no destroier nao afunda.");
+        check(game.getHiddenShipType(0, 0) == null, "Casa ja atingida nao e mais oculta.");
+        check(game.getHiddenShipType(0, 1) == TipoEmbarcacao.DESTROYER, "Parte restante continua oculta.");
+        check(game.fire(0, 1).isSunk(), "Ultima parte do destroier deve afundar.");
+        check(game.fire(3, 3).isSunk(), "Submarino afunda com um tiro.");
     }
 
     private static String layout(Tabuleiro board) {

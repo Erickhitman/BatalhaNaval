@@ -1,6 +1,7 @@
 package org.example.view;
 
 import org.example.enums.Dificuldade;
+import org.example.enums.TipoEmbarcacao;
 import org.example.model.ResultadoDisparo;
 
 import javax.swing.JFrame;
@@ -36,6 +37,15 @@ public class JanelaJogo extends JFrame {
     public void updateGame(int row, int column, ResultadoDisparo result, int shotsRemaining) {
         gamePanel.markShot(row, column, result);
         gamePanel.updateShots(shotsRemaining);
+    }
+
+    public void revealShip(int row, int column, TipoEmbarcacao type) {
+        gamePanel.revealShip(row, column, type);
+    }
+
+    /** Mantem o tabuleiro na tela e libera o botao "Ver resultado". */
+    public void showEnd(boolean won, int shotsUsed, Dificuldade difficulty) {
+        gamePanel.showEnd(won, () -> showResult(won, shotsUsed, difficulty));
     }
 
     public void showResult(boolean won, int shotsUsed, Dificuldade difficulty) {
