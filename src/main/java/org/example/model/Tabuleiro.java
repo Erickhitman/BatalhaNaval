@@ -48,6 +48,18 @@ public class Tabuleiro {
         return null;
     }
 
+    // devolve qual pedaço do navio tá nessa casa, ou -1 se for só água
+    // (a tela usa isso pra recortar a imagem do navio no lugar certo)
+    public int getShipPart(int row, int column) {
+        Casa cell = getCell(row, column);
+        return cell.hasShip() ? cell.getShipPart() : -1;
+    }
+
+    // false = navio em pé, aí a imagem tem que ser girada
+    public boolean isShipHorizontal(int row, int column) {
+        return getCell(row, column).isHorizontal();
+    }
+
     public boolean canPlaceShip(int length, int row, int column, boolean horizontal) {
         if (length <= 0 || length > size || !isInside(row, column)) {
             return false;
@@ -75,7 +87,8 @@ public class Tabuleiro {
         int rowStep = horizontal ? 0 : 1;
         int columnStep = horizontal ? 1 : 0;
         for (int part = 0; part < length; part++) {
-            cells[row + rowStep * part][column + columnStep * part].setShip(ship);
+            // agora cada casa também guarda qual pedaço do navio ela é
+            cells[row + rowStep * part][column + columnStep * part].setShip(ship, part, horizontal);
         }
         shipCount++;
         remainingShipCells += length;

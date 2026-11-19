@@ -16,7 +16,7 @@ public class JanelaJogo extends JFrame {
         super("Batalha Naval");
         this.actions = actions;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(420, 400));
+        setMinimumSize(new Dimension(1000, 620)); // menor que isso o layout novo começa a apertar
         showMainMenu();
         setLocationRelativeTo(null);
     }
@@ -30,17 +30,20 @@ public class JanelaJogo extends JFrame {
     }
 
     public void showGame(Dificuldade difficulty) {
-        gamePanel = new PainelJogo(difficulty, actions::fire, this::showMainMenu);
+        // o último parâmetro é o botão Reiniciar: começa outra partida na mesma dificuldade
+        gamePanel = new PainelJogo(difficulty, actions::fire, this::showMainMenu,
+                () -> actions.startGame(difficulty));
         showScreen(gamePanel);
     }
 
-    public void updateGame(int row, int column, ResultadoDisparo result, int shotsRemaining) {
-        gamePanel.markShot(row, column, result);
+    public void updateGame(int row, int column, ResultadoDisparo result, int shotsRemaining,
+                           int shipPart, boolean horizontal) {
+        gamePanel.markShot(row, column, result, shipPart, horizontal);
         gamePanel.updateShots(shotsRemaining);
     }
 
-    public void revealShip(int row, int column, TipoEmbarcacao type) {
-        gamePanel.revealShip(row, column, type);
+    public void revealShip(int row, int column, TipoEmbarcacao type, int shipPart, boolean horizontal) {
+        gamePanel.revealShip(row, column, type, shipPart, horizontal);
     }
 
     /** Mantem o tabuleiro na tela e libera o botao "Ver resultado". */

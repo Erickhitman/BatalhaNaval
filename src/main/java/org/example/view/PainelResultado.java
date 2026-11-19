@@ -1,34 +1,29 @@
 package org.example.view;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 
-public class PainelResultado extends JPanel {
+// Tela final: diz se ganhou ou perdeu e quantos tiros foram usados.
+public class PainelResultado extends PainelFundo {
     public PainelResultado(boolean won, int shotsUsed, Runnable onPlayAgain, Runnable onMenu) {
-        setBorder(BorderFactory.createEmptyBorder(55, 50, 55, 50));
-        setLayout(new BorderLayout(20, 20));
+        setLayout(new GridBagLayout());
 
-        JLabel result = new JLabel(won ? "Vitória!" : "Fim de jogo: você perdeu.",
-                SwingConstants.CENTER);
-        result.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 28));
-        add(result, BorderLayout.NORTH);
+        // textinho em cima do título: azul se ganhou, avermelhado se perdeu
+        JLabel tag = Tema.legenda(won ? "Missão cumprida" : "Missão fracassada", 13f);
+        tag.setForeground(won ? Tema.DESTAQUE : new Color(255, 120, 105));
+        JLabel result = Tema.titulo(won ? "VITÓRIA" : "DERROTA", 60f);
+        JLabel usedShots = Tema.rotulo("Tiros utilizados: " + shotsUsed, Font.PLAIN, 20f);
+        usedShots.setForeground(Tema.TEXTO_SUAVE);
 
-        JLabel usedShots = new JLabel("Tiros utilizados: " + shotsUsed, SwingConstants.CENTER);
-        usedShots.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
-        add(usedShots, BorderLayout.CENTER);
+        JButton againButton = Tema.botaoPrimario("Jogar novamente");
+        JButton menuButton = Tema.botao("Voltar ao menu");
 
-        JPanel buttons = new JPanel(new GridLayout(2, 1, 12, 12));
-        JButton againButton = new JButton("Jogar novamente");
-        JButton menuButton = new JButton("Voltar ao menu");
-        buttons.add(againButton);
-        buttons.add(menuButton);
-        add(buttons, BorderLayout.SOUTH);
+        // os textos aparecem na ordem que são passados: tag, título, tiros
+        add(PainelMenuPrincipal.montarConteudo(
+                Tema.colunaBotoes(againButton, menuButton), tag, result, usedShots));
 
         againButton.addActionListener(event -> onPlayAgain.run());
         menuButton.addActionListener(event -> onMenu.run());

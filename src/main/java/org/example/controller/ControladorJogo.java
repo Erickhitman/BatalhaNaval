@@ -35,7 +35,9 @@ public class ControladorJogo implements JanelaJogo.AcoesControladorJogo {
                 || result.getOutcome() == EstadoDisparo.GAME_OVER) {
             return;
         }
-        window.updateGame(row, column, result, game.getShotsRemaining());
+        // manda também o pedaço do navio e a direção, pra tela desenhar a parte certa da imagem
+        window.updateGame(row, column, result, game.getShotsRemaining(),
+                game.getShipPart(row, column), game.isShipHorizontal(row, column));
         if (game.isFinished()) {
             if (!game.isWon()) {
                 revealRemainingShips();
@@ -50,7 +52,8 @@ public class ControladorJogo implements JanelaJogo.AcoesControladorJogo {
             for (int column = 0; column < size; column++) {
                 TipoEmbarcacao type = game.getHiddenShipType(row, column);
                 if (type != null) {
-                    window.revealShip(row, column, type);
+                    window.revealShip(row, column, type,
+                            game.getShipPart(row, column), game.isShipHorizontal(row, column));
                 }
             }
         }

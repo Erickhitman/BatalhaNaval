@@ -59,6 +59,15 @@ public class ServicoJogo {
         return board.getHiddenShipType(row, column);
     }
 
+    // só repassam pro tabuleiro, o controlador precisa disso pra mandar pra tela
+    public int getShipPart(int row, int column) {
+        return board.getShipPart(row, column);
+    }
+
+    public boolean isShipHorizontal(int row, int column) {
+        return board.isShipHorizontal(row, column);
+    }
+
     public int getShotsUsed() {
         return shotsUsed;
     }
